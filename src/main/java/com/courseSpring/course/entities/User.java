@@ -1,29 +1,36 @@
 package com.courseSpring.course.entities;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.io.Serializable;
-@Entity
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Userr implements Serializable {
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "tb_user")
+public class User implements Serializable {
 
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
     private String phone;
     private String password;
 
-    public Userr() {
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
+
+
+    public User() {
     }
 
-    public Userr(Long id, String name, String email, String phone, String password) {
+    public User(Long id, String name, String email, String phone, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -70,19 +77,24 @@ public class Userr implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    public List<Order> getOrders() {
+        return orders;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Userr)) return false;
+        if (!(o instanceof User)) return false;
 
-        Userr userr = (Userr) o;
+        User user = (User) o;
 
-        return getId().equals(userr.getId());
+        return getId().equals(user.getId());
     }
 
     @Override
     public int hashCode() {
         return getId().hashCode();
     }
+
+
 }
